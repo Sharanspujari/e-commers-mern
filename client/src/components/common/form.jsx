@@ -3,7 +3,7 @@
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Select,SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 import PropTypes from "prop-types";
 const CommonForm = ({formControls,formData,setFormData,onSubmit,buttonText}) => {
@@ -11,7 +11,7 @@ const CommonForm = ({formControls,formData,setFormData,onSubmit,buttonText}) => 
     function renderInputsByComponentType(formItem){
      let element = null;
      const value = formData[formItem.name]
-     console.log('value: ', value);
+     
      switch(formItem.componentType){
         case 'input':
             element = <Input name={formItem.name}  value={value} 
@@ -28,9 +28,9 @@ const CommonForm = ({formControls,formData,setFormData,onSubmit,buttonText}) => 
                 ...formData,[formItem.name]:value
             })} value={value}>
                 <SelectTrigger className="full">
-                 <SelectValue placeholder={formItem.placeholder}/>
+                 <SelectValue placeholder={formItem.label}/>
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="z-50 bg-white">
                     {
                   formItem.options && formItem.options.length> 0 ?   formItem.options.map((optionItem)=>(
                 <SelectItem key={optionItem.id} value={optionItem.id}>{optionItem.label}</SelectItem>
