@@ -1,15 +1,17 @@
 
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { FileIcon, UploadCloudIcon, XIcon } from 'lucide-react'
 import { Button } from '../ui/button'
+import axios from 'axios'
 
 const ProductImageUpload = ({imageFile,setImageFile,uploadedImgUrl,setUploadedImgUrl}) => {
   const inputRef = useRef(null)
 
   const handleImageFileChange = (event)=>{
    const selectedFile = event.target.files?.[0];
+   
     if(selectedFile) setImageFile(selectedFile)
   }
 
@@ -27,10 +29,27 @@ const handleRemoveImg = ()=>{
   setImageFile(null);
   if(inputRef.current) inputRef.current.value=''
 }
+
+const uploadImgToCloudinary =async()=>{
+  const data = new FormData();
+  
+  data.append("my_file",imageFile);
+  
+  const response = await axios.post("http://localhost:5000/api/admin/products/upload-image",data)
+  
+  if(response.data?.success) setUploadedImgUrl(response.data)
+}
+
+useEffect(()=>{
+  if(imageFile !== null ) {
+    uploadImgToCloudinary()
+  }
+},[imageFile])
+
   return (
-    <div className='w-full max-w-md mx-auto mt-4'>
+    <div  className='w-full max-w-md mx-auto mt-4'>
   <Label className="text-lg font-semibold mb-2 block">Upload</Label>
-  <div onDragOver={handleDragOver} onDrop={handleDrop} className='border border-2 border-dashed rounded-lg p-4'>
+  <div  onDragOver={handleDragOver} onDrop={handleDrop} className='border border-2 border-dashed rounded-lg p-4'>
     <Input id="image-upload" className="hidden" type="file" ref={inputRef} onChange={handleImageFileChange}/>
     {
       !imageFile ? <Label htmlFor="image-upload" className="flex flex-col items-center justify-center h-32 cursor-pointer">
