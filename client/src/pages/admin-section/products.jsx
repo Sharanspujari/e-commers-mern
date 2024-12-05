@@ -20,8 +20,10 @@ const initialFormData ={
 const AdminProducts = () => {
   const [openAddProductModal,setOpenAddProductModal] =useState(false);
   const [formData,setFormData] =useState(initialFormData);
+  console.log('formData: ', formData);
   const [imageFile,setImageFile]=useState();
   const [uploadedImgUrl,setUploadedImgUrl]=useState(null);
+  const [imageLoading,setImageLoading] =useState(false);
   const onSubmit =()=>{
 
   }
@@ -38,7 +40,7 @@ const AdminProducts = () => {
 Add New Product
   </SheetTitle>
 </SheetHeader>
-<ProductImageUpload imageFile={imageFile} setImageFile={setImageFile} uploadedImgUrl={uploadedImgUrl} setUploadedImgUrl={setUploadedImgUrl}/>
+<ProductImageUpload imageFile={imageFile} setImageFile={setImageFile} setImageLoading={setImageLoading} uploadedImgUrl={uploadedImgUrl} setUploadedImgUrl={setUploadedImgUrl}/>
 <div className="my-6">
 <CommonForm formData={formData} setFormData={setFormData} formControls={addProductFormElements} onSubmit={onSubmit} buttonText="Add"/>
 </div>

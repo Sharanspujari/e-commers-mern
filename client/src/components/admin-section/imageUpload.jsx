@@ -6,13 +6,13 @@ import { FileIcon, UploadCloudIcon, XIcon } from 'lucide-react'
 import { Button } from '../ui/button'
 import axios from 'axios'
 
-const ProductImageUpload = ({imageFile,setImageFile,uploadedImgUrl,setUploadedImgUrl}) => {
+const ProductImageUpload = ({imageFile,setImageFile,setImageLoading,uploadedImgUrl,setUploadedImgUrl}) => {
+  console.log('uploadedImgUrl: ', uploadedImgUrl);
   const inputRef = useRef(null)
 
   const handleImageFileChange = (event)=>{
    const selectedFile = event.target.files?.[0];
-   
-    if(selectedFile) setImageFile(selectedFile)
+       if(selectedFile) setImageFile(selectedFile)
   }
 
   const handleDragOver = (event)=>{
@@ -30,14 +30,18 @@ const handleRemoveImg = ()=>{
   if(inputRef.current) inputRef.current.value=''
 }
 
-const uploadImgToCloudinary =async()=>{
+const uploadImgToCloudinary = async()=>{
+  setImageLoading(true)
   const data = new FormData();
   
   data.append("my_file",imageFile);
   
   const response = await axios.post("http://localhost:5000/api/admin/products/upload-image",data)
   
-  if(response.data?.success) setUploadedImgUrl(response.data)
+  if(response.data?.success){
+    setImageLoading(false)
+    setUploadedImgUrl(response.data?.result?.url)
+  }
 }
 
 useEffect(()=>{
