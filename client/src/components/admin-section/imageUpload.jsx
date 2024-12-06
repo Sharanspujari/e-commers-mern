@@ -5,8 +5,9 @@ import { useEffect, useRef } from 'react'
 import { FileIcon, UploadCloudIcon, XIcon } from 'lucide-react'
 import { Button } from '../ui/button'
 import axios from 'axios'
+import { Skeleton } from '../ui/skeleton'
 
-const ProductImageUpload = ({imageFile,setImageFile,setImageLoading,uploadedImgUrl,setUploadedImgUrl}) => {
+const ProductImageUpload = ({imageFile,setImageFile,setImageLoading,uploadedImgUrl,imageLoading,setUploadedImgUrl}) => {
   console.log('uploadedImgUrl: ', uploadedImgUrl);
   const inputRef = useRef(null)
 
@@ -60,7 +61,7 @@ useEffect(()=>{
         <UploadCloudIcon className='w-10 h-10 text-gray-600 mb-2'/>
         <span>Drag & drop or click to upload image</span>
 
-      </Label>:<div className='flex items-center justify-between'>
+      </Label>: imageLoading ? (<Skeleton className="w-18  h-10 bg-gray-300"/>) :<div className='flex items-center justify-between'>
         <div className='flex items-center'>
           <FileIcon className='w-8 text-primary mr-2 h-8'/>
         </div>

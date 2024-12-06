@@ -8,5 +8,5 @@ router.post("/upload-image",upload.single("my_file"),handleImageUpload)
 router.post("/add-product",addNewProduct)
 router.put("/edit-product/:id",editProduct)
 router.delete("/delete-product/:id",deleteProduct)
-router.get("/get-product/:id",deleteProduct)
+router.get("/get-products",getAllProduct)
 module.exports = router;
