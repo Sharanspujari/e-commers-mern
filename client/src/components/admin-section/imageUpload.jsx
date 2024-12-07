@@ -7,7 +7,7 @@ import { Button } from '../ui/button'
 import axios from 'axios'
 import { Skeleton } from '../ui/skeleton'
 
-const ProductImageUpload = ({imageFile,setImageFile,setImageLoading,uploadedImgUrl,imageLoading,setUploadedImgUrl}) => {
+const ProductImageUpload = ({imageFile,setImageFile,setImageLoading,uploadedImgUrl,imageLoading,setUploadedImgUrl,isEditMode}) => {
   console.log('uploadedImgUrl: ', uploadedImgUrl);
   const inputRef = useRef(null)
 
@@ -54,10 +54,10 @@ useEffect(()=>{
   return (
     <div  className='w-full max-w-md mx-auto mt-4'>
   <Label className="text-lg font-semibold mb-2 block">Upload</Label>
-  <div  onDragOver={handleDragOver} onDrop={handleDrop} className='border border-2 border-dashed rounded-lg p-4'>
-    <Input id="image-upload" className="hidden" type="file" ref={inputRef} onChange={handleImageFileChange}/>
+  <div  onDragOver={handleDragOver} onDrop={handleDrop} className={`${isEditMode ? "opacity-60"  : ""} border border-2 border-dashed rounded-lg p-4`}>
+    <Input id="image-upload" className="hidden" type="file" ref={inputRef} onChange={handleImageFileChange} disabled = {isEditMode}/>
     {
-      !imageFile ? <Label htmlFor="image-upload" className="flex flex-col items-center justify-center h-32 cursor-pointer">
+      !imageFile ? <Label htmlFor="image-upload" className={`flex flex-col items-center justify-center h-32 cursor-pointer ${isEditMode ? "cursor-not-allowed" : ''}`}>
         <UploadCloudIcon className='w-10 h-10 text-gray-600 mb-2'/>
         <span>Drag & drop or click to upload image</span>
 

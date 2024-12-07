@@ -9,6 +9,7 @@ import ProductImageUpload from "@/components/admin-section/imageUpload"
 import { useDispatch, useSelector } from "react-redux"
 import { addNewProduct, getAllProducts } from "@/store/product-slice"
 import { useToast } from "@/hooks/use-toast"
+import AdminProductTail from "@/components/admin-section/product-tail"
 
 const initialFormData ={
   image:null,
@@ -26,7 +27,7 @@ const AdminProducts = () => {
   
     const [imageFile,setImageFile]=useState();
   const [uploadedImgUrl,setUploadedImgUrl]=useState(null);
-  
+  const [currentEditId,setCurrentEditId] =useState(null);
   const [imageLoading,setImageLoading] =useState(false);
   const dispatch = useDispatch();
   const {productList} =useSelector((state)=>state.adminProducts)
@@ -59,20 +60,24 @@ const AdminProducts = () => {
     <Button onClick ={()=>setOpenAddProductModal(true)} className="bg-black text-white hover:bg-black rounded-md">Add New Product</Button>
    </div>
    <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-  <Sheet open={openAddProductModal} onOpenChange={()=>setOpenAddProductModal(false)}>
+    {
+      productList && productList.length > 0 ? productList.map((productItem)=><AdminProductTail setFormData={setFormData} setOpenAddProductModal={setOpenAddProductModal} setCurrentEditId={setCurrentEditId} currentEditId={currentEditId}  product={productItem}/>) : null
+    }
+    </div>
+  <Sheet open={openAddProductModal} onOpenChange={()=>{setOpenAddProductModal(false);setCurrentEditId(null);setFormData(initialFormData)}}>
    <SheetContent side="right" className="overflow-auto bg-white">
 <SheetHeader>
   <SheetTitle >
 Add New Product
   </SheetTitle>
 </SheetHeader>
-<ProductImageUpload imageFile={imageFile} setImageFile={setImageFile} setImageLoading={setImageLoading} imageLoading={imageLoading} uploadedImgUrl={uploadedImgUrl} setUploadedImgUrl={setUploadedImgUrl}/>
+<ProductImageUpload isEditMode={currentEditId !== null} imageFile={imageFile} setImageFile={setImageFile} setImageLoading={setImageLoading} imageLoading={imageLoading} uploadedImgUrl={uploadedImgUrl} setUploadedImgUrl={setUploadedImgUrl}/>
 <div className="my-6">
 <CommonForm formData={formData} setFormData={setFormData} formControls={addProductFormElements} onSubmit={onSubmit} buttonText="Add"/>
 </div>
    </SheetContent>
   </Sheet>
-   </div>
+  
     </Fragment>
    
   )
