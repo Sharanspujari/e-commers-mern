@@ -6,7 +6,8 @@ import { Label } from "../ui/label"
 import { Select,SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 import PropTypes from "prop-types";
-const CommonForm = ({formControls,formData,setFormData,onSubmit,buttonText}) => {
+const CommonForm = ({formControls,formData,setFormData,isBtnDisabled,onSubmit,buttonText}) => {
+    console.log('isBtnDisabled: ', isBtnDisabled);
 
     function renderInputsByComponentType(formItem){
      let element = null;
@@ -72,7 +73,7 @@ const CommonForm = ({formControls,formData,setFormData,onSubmit,buttonText}) => 
   </div>)  
 }
         </div>
-        <Button type="submit" className = "mt-2 w-full bg-black text-white">{buttonText || 'Submit'}</Button>
+        <Button type="submit" disabled = {isBtnDisabled} className = "mt-2 w-full bg-black text-white">{buttonText || 'Submit'}</Button>
     </form>
   )
 }

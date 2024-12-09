@@ -29,7 +29,9 @@ export const getAllProducts  = createAsyncThunk("/product/getAllProducts",async(
 
 //  update product
  export const editProduct  = createAsyncThunk("/product/editProduct",async({id,formData})=>{
-    const result = await axios.put(`http://localhost:5000/api/admin/products/edit-product/${id}`)
+    const result = await axios.put(`http://localhost:5000/api/admin/products/edit-product/${id}`,formData,{
+        headers:{"Content-Type":"application/json"}
+    })
     return result?.data
  })
 const AdminProductsSlice = createSlice({

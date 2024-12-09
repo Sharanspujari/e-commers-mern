@@ -18,7 +18,7 @@ const AdminProductTail = ({product,setOpenAddProductModal,setCurrentEditId,curre
             <div className='flex justify-between items-center mb-2'>
                 <span className={`${product?.salePrice > 0 ? 'line-through' : ""} text-lg font-semibold text-primary`}>${product?.price}</span>
                 {
-                    product?.salePrice > 0 ? (<span className='text-lg font-bold'>${product?.price}</span>
+                    product?.salePrice > 0 ? (<span className='text-lg font-bold'>${product?.salePrice}</span>
                     ):null
                 }
             </div>
