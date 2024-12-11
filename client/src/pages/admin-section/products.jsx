@@ -7,7 +7,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import CommonForm from "@/components/common/form"
 import ProductImageUpload from "@/components/admin-section/imageUpload"
 import { useDispatch, useSelector } from "react-redux"
-import { addNewProduct, editProduct, getAllProducts } from "@/store/product-slice"
+import { addNewProduct, deleteProduct, editProduct, getAllProducts } from "@/store/product-slice"
 import { useToast } from "@/hooks/use-toast"
 import AdminProductTail from "@/components/admin-section/product-tail"
 
@@ -34,7 +34,7 @@ const AdminProducts = () => {
   const {productList} =useSelector((state)=>state.adminProducts)
     const {toast} =useToast()
 
-
+   
     const isBtnDisabled = ()=>{
       return Object.keys(formData).map((keys)=>formData[keys] !== '').every((item)=>item)
     }
@@ -71,6 +71,17 @@ const AdminProducts = () => {
   useEffect(()=>{
     dispatch(getAllProducts())
   },[dispatch])
+
+  const handleDeleteProduct = (productId)=>{
+   if(productId){
+    dispatch(deleteProduct(productId)).then((data)=>{
+      if(data?.payload?.success){
+        dispatch(getAllProducts())
+      }
+    })
+   }
+  
+  }
   return (
     <Fragment>
    <div className="mb-5 w-full flex justify-end">
@@ -78,10 +89,10 @@ const AdminProducts = () => {
    </div>
    <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
     {
-      productList && productList.length > 0 ? productList.map((productItem)=><AdminProductTail setFormData={setFormData} setOpenAddProductModal={setOpenAddProductModal} setCurrentEditId={setCurrentEditId} currentEditId={currentEditId}  product={productItem}/>) : null
+      productList && productList.length > 0 ? productList.map((productItem)=><AdminProductTail  key={productItem._id} handleDeleteProduct={handleDeleteProduct} setFormData={setFormData} setOpenAddProductModal={setOpenAddProductModal} setCurrentEditId={setCurrentEditId} currentEditId={currentEditId}  product={productItem}/>) : null
     }
     </div>
-  <Sheet open={openAddProductModal} onOpenChange={()=>{setOpenAddProductModal(false);setCurrentEditId(null);setFormData(initialFormDatanot)}}>
+  <Sheet open={openAddProductModal} onOpenChange={()=>{setOpenAddProductModal(false);setCurrentEditId(null);setFormData(initialFormData)}}>
    <SheetContent side="right" className="overflow-auto bg-white">
 <SheetHeader>
   <SheetTitle >

@@ -2,7 +2,7 @@
 import { Card, CardContent, CardFooter } from '../ui/card'
 import { Button } from '../ui/button'
 
-const AdminProductTail = ({product,setOpenAddProductModal,setCurrentEditId,currentEditId,setFormData}) => {
+const AdminProductTail = ({product,setOpenAddProductModal,handleDeleteProduct,setCurrentEditId,currentEditId,setFormData}) => {
   return (
     <Card className="w-full max-w-sm mx-auto">
      <div>
@@ -25,7 +25,7 @@ const AdminProductTail = ({product,setOpenAddProductModal,setCurrentEditId,curre
         </CardContent>
         <CardFooter className="flex justify-between items-center">
             <Button onClick={()=>{setCurrentEditId(product?._id);setOpenAddProductModal(true);setFormData(product)}}  className="bg-black text-white rounded-md hover:bg-slate-700">Edit</Button>
-            <Button className="bg-black text-white rounded-md hover:bg-slate-700">Delete</Button>
+            <Button onClick={()=>handleDeleteProduct(product?._id)} className="bg-black text-white rounded-md hover:bg-slate-700">Delete</Button>
         </CardFooter>
      </div>
     </Card>

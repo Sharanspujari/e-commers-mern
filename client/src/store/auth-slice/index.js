@@ -23,6 +23,13 @@ const response = await axios.post("http://localhost:5000/api/auth/login",formDat
 })
 return response.data
 })
+export const logoutUser = createAsyncThunk("/auth/logout",async()=>{
+    const response = await axios.post("http://localhost:5000/api/auth/logout",{},{
+        withCredentials:true
+    })
+    return response.data
+})
+
 
 export const checkAuth = createAsyncThunk("/auth/checkAuth",async()=>{
     
@@ -37,10 +44,7 @@ const response = await axios.get("http://localhost:5000/api/auth//check-auth",{
 return response.data
 })
 
-export const logoutUser = createAsyncThunk("auth/logout",async()=>{
-    const response  = await axios.post("http://localhost:5000/api/auth/logout")
-    return response.data
-})
+
 const authSlice = createSlice({
     name:"auth",
     initialState,
