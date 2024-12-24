@@ -7,7 +7,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import CommonForm from "@/components/common/form"
 import ProductImageUpload from "@/components/admin-section/imageUpload"
 import { useDispatch, useSelector } from "react-redux"
-import { addNewProduct, deleteProduct, editProduct, getAllProducts } from "@/store/product-slice"
+import { addNewProduct, deleteProduct, editProduct, getAllProducts } from "@/store/admin/product-slice"
 import { useToast } from "@/hooks/use-toast"
 import AdminProductTail from "@/components/admin-section/product-tail"
 
