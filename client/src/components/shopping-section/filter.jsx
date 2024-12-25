@@ -5,7 +5,7 @@ import { Checkbox } from '../ui/checkbox'
 import { Separator } from '../ui/separator'
 
 
-const ProductFilter = () => {
+const ProductFilter = ({ filterList, handleFilter }) => {
   return (
     <div className='bg-background rounded-lg shadow-sm'>
       <div className='p-4 border-b'>
@@ -13,13 +13,13 @@ const ProductFilter = () => {
       </div>
       <div className='p-4 space-y-4'>
         {
-          Object.keys(filterOptions).map(keyItms => <Fragment key={keyItms}>
+          Object.keys(filterOptions).map(keyItem => <Fragment key={keyItem}>
             <div>
-              <h3 className='text-base font-bold'>{keyItms}</h3>
+              <h3 className='text-base font-bold'>{keyItem}</h3>
               <div className='grid gap-2 mt-2'>
                 {
-                  filterOptions[keyItms].map(option => <Label className="flex items-center gap-2 font-medium" key={option.id}>
-                    <Checkbox />
+                  filterOptions[keyItem].map(option => <Label className="flex items-center gap-2 font-medium" key={option.id}>
+                    <Checkbox onCheckedChange ={() => handleFilter(keyItem, option.id)} />
                     {option.label}
                   </Label>)
                 }

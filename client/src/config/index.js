@@ -137,6 +137,21 @@ export const addProductFormElements = [
     },
   ]
 
+  export const brandOptionMap = {
+    nike:'Nike',
+    adidas:'Adidas',
+    puma:'Puma',
+    levi:'Levi',
+    zara:'Zara',
+    "h&m":'H&M'
+  }
+  export const categoryOptionMap ={
+    men:'Men',
+    women:'Women',
+    kids:'Kids',
+    accessories:'Accessories',
+    footwear:'Footwear'
+  }
   export const filterOptions = {
     category:[
       {id:"men",label:"Men"},
