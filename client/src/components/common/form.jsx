@@ -73,7 +73,7 @@ const CommonForm = ({formControls,formData,setFormData,isBtnDisabled,onSubmit,bu
   </div>)  
 }
         </div>
-        <Button type="submit" disabled = {isBtnDisabled} className = "mt-2 w-full bg-black text-white">{buttonText || 'Submit'}</Button>
+        <Button type="submit" disabled = {isBtnDisabled} className = "mt-2 w-full bg-black hover:bg-gray-700 text-white">{buttonText || 'Submit'}</Button>
     </form>
   )
 }

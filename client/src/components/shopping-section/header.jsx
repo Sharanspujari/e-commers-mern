@@ -35,21 +35,21 @@ const handleLogout = () =>{
 </Button>
 <DropdownMenu >
   <DropdownMenuTrigger asChild>
-<Avatar className="bg-black">
+<Avatar className="bg-black cursor-pointer">
 <AvatarFallback className="bg-black text-white font-extrabold">
 {user.userName[0].toUpperCase()}
 </AvatarFallback>
 </Avatar>
   </DropdownMenuTrigger >
-  <DropdownMenuContent  side="right" className="w-56 z-50">
+  <DropdownMenuContent  side="right" className="w-56 bg-white">
    <DropdownMenuLabel>Logged in as {user?.userName}</DropdownMenuLabel>
     <DropdownMenuSeparator/>
-     <DropdownMenuItem onClick={()=>navigate('/shop/account')}>
+     <DropdownMenuItem className="cursor-pointer" onClick={()=>navigate('/shop/account')}>
      <UserCog className="mr-2 h-4 w-4"/>
      Account
      </DropdownMenuItem>
      <DropdownMenuSeparator/>
-     <DropdownMenuItem  onClick={handleLogout}>
+     <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
      <LogOut className="mr-2 h-4 w-4"/>
      Logout
      </DropdownMenuItem>

@@ -5,53 +5,90 @@ import ShoppingProductTile from "@/components/shopping-section/product-tail"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { sortOptions } from "@/config"
-import { getAllProducts } from "@/store/admin/product-slice"
+// import { getAllProducts } from "@/store/admin/product-slice"
 import { fetchAllShoppingProducts } from "@/store/user/products-slice"
 import { ArrowUpDownIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { useSearchParams } from "react-router-dom"
+
+// helper function for query string
+const createSearchParamHelper = (filterParams) => {
+  const queryParams = [];
+  for (const [key, value] of Object.entries(filterParams)) {
+    if (Array.isArray(value) && value.length > 0) {
+      const paramValue = value.join(",")
+      queryParams.push(`${key}=${encodeURIComponent(paramValue)}`)
+    }
+  }
+  return queryParams.join("&")
+}
+
 
 const ShoppingListing = () => {
   const [sortList, setSortList] = useState(null);
   const [filterList, setFilterList] = useState({});
+  const [searchParams, setSearchParams] = useSearchParams()
+
   // fetch list of products
   const dispatch = useDispatch();
   const { productList } = useSelector(state => state.shoppingProducts)
 
   useEffect(() => {
-    dispatch(fetchAllShoppingProducts())
-  }, [dispatch])
+    if (sortList !== null && filterList !== null)
+      dispatch(fetchAllShoppingProducts({ filterParams: filterList, sortParams: sortList }))
+  }, [dispatch, sortList, filterList])
+
+  useEffect(() => {
+    setSortList('price-lowtohigh')
+    setFilterList(JSON.parse(sessionStorage.getItem('filters')) || {})
+  }, [])
+
+  useEffect(() => {
+    if (filterList && Object.keys(filterList).length > 0) {
+      const createQueryString = createSearchParamHelper(filterList)
+      setSearchParams(new URLSearchParams(createQueryString))
+    }
+  }, [filterList])
 
   // sort products
   const handleSort = (value) => {
     console.log('value: ', value);
+    setSortList(value)
   }
   // filter product
   const handleFilter = (getSectionId, getFilterOption) => {
-    console.log(getSectionId, getFilterOption);
     let cpyFilter = { ...filterList };
     const indexOfCurrentSection = Object.keys(cpyFilter).indexOf(getSectionId)
     if (indexOfCurrentSection === -1) {
       cpyFilter = { ...cpyFilter, [getSectionId]: [getFilterOption] }
+    } else {
+      const indexOfCurrentOption = cpyFilter[getSectionId].indexOf(getFilterOption)
+      if (indexOfCurrentOption === -1) {
+        cpyFilter[getSectionId].push(getFilterOption)
+      } else {
+        cpyFilter[getSectionId].splice(indexOfCurrentOption, 1)
+      }
     }
-    console.log('cpyFilter: ', cpyFilter);
+    setFilterList(cpyFilter)
+    sessionStorage.setItem("filters", JSON.stringify(cpyFilter))
   }
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-4 md:p-6">
+    <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
       <ProductFilter filterList={filterList} handleFilter={handleFilter} />
       <div className="bg-background w-full rounded-lg shadow-sm">
         <div className="p-4 border-b flex items-center justify-between">
           <h2 className="text-lg font-extrabold">All Products</h2>
           <div className="flex items-center gap-3">
             <span className="text-muted-foreground">{productList?.length} Products</span>
-            <DropdownMenu>
+            <DropdownMenu >
               <DropdownMenuTrigger>
                 <Button variant="outline" size="sm" className="flex items-center gap-1">
                   <ArrowUpDownIcon className="h-4 w-4" />
                   <span>Sort by</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[200px]">
+              <DropdownMenuContent align="end" className="w-[200px] z-50 bg-white">
                 <DropdownMenuRadioGroup value={sortList} onValueChange={handleSort}>
                   {
                     sortOptions.map((sortItem) => <DropdownMenuRadioItem value={sortItem.id} key={sortItem.id}>{sortItem.label}</DropdownMenuRadioItem>)
