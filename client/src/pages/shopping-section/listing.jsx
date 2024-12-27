@@ -1,12 +1,13 @@
 // import React from 'react'
 
 import ProductFilter from "@/components/shopping-section/filter"
+import ProductDetailDialog from "@/components/shopping-section/product-detail"
 import ShoppingProductTile from "@/components/shopping-section/product-tail"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { sortOptions } from "@/config"
 // import { getAllProducts } from "@/store/admin/product-slice"
-import { fetchAllShoppingProducts } from "@/store/user/products-slice"
+import { fetchAllShoppingProducts, fetchProductDetail } from "@/store/user/products-slice"
 import { ArrowUpDownIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
@@ -29,11 +30,21 @@ const ShoppingListing = () => {
   const [sortList, setSortList] = useState(null);
   const [filterList, setFilterList] = useState({});
   const [searchParams, setSearchParams] = useSearchParams()
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // open product detail dailog when product details has value
+
 
   // fetch list of products
   const dispatch = useDispatch();
-  const { productList } = useSelector(state => state.shoppingProducts)
-
+  const { productList, productDetail } = useSelector(state => state.shoppingProducts)
+  console.log('productList: ', productList);
+  console.log('productDetail: ', productDetail);
+  useEffect(() => {
+    if (productDetail !== null) {
+      setIsDialogOpen(true)
+    }
+  }, [productDetail])
   useEffect(() => {
     if (sortList !== null && filterList !== null)
       dispatch(fetchAllShoppingProducts({ filterParams: filterList, sortParams: sortList }))
@@ -73,6 +84,11 @@ const ShoppingListing = () => {
     setFilterList(cpyFilter)
     sessionStorage.setItem("filters", JSON.stringify(cpyFilter))
   }
+
+  const handleGetProductDetails = (getCurrentProId) => {
+    console.log('getCurrentProId: ', getCurrentProId);
+    dispatch(fetchProductDetail(getCurrentProId))
+  }
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
       <ProductFilter filterList={filterList} handleFilter={handleFilter} />
@@ -101,10 +117,11 @@ const ShoppingListing = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  lg:grid-cols-4 gap-4 p-4">
           {
-            productList && productList.length > 0 ? productList.map(productItem => <ShoppingProductTile product={productItem} />) : null
+            productList && productList.length > 0 ? productList.map(productItem => <ShoppingProductTile key={productItem._id} product={productItem} handleGetProductDetails={handleGetProductDetails} />) : null
           }
         </div>
       </div>
+      <ProductDetailDialog open={isDialogOpen} setOpen={setIsDialogOpen} productDetail={productDetail} />
     </div>
   )
 }

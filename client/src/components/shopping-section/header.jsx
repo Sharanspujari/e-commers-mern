@@ -60,10 +60,10 @@ const handleLogout = () =>{
 }
 
 const ShoppingHeader = () => {
-  const {isAuthenticated,user}  = useSelector((state)=>state.auth)
+  // const {isAuthenticated,user}  = useSelector((state)=>state.auth)
   
   return (
-<header className="sticky top-0 z-40 w-full border-b bg-background">
+<header className="sticky bg-white top-0 z-40 w-full border-b bg-background">
 <div className="flex h-16 items-center justify-between px-4 md:px-6">
 <Link to={"/shop/home"} className="flex items-center gap-2">
 <HousePlug />

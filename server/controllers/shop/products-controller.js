@@ -1,4 +1,5 @@
 
+const { json } = require('stream/consumers');
 const Product =require('../../models/Product')
 
 const getFilteredProducts= async (req,res)=>{
@@ -49,4 +50,27 @@ res.status(200).json({
     }
 }
 
-module.exports = {getFilteredProducts};
+const getProductDetail = async(req,res)=>{
+    try{
+const {id} =req.params
+const product= await Product.findById(id);
+if(!product){
+   return res.status(404).json({
+    success:false,
+    message:'Product not found'
+   })
+}
+res.status(200).json({
+    success:true,
+    statusCode:200,
+    data:product
+})
+    }catch(error){
+        console.log('error: ', error);
+       res.status(500).json({
+        success:false,
+        message:'Some error occured'
+       })
+    }
+}
+module.exports = {getFilteredProducts,getProductDetail};
