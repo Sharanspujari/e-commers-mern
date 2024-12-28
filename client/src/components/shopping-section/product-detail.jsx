@@ -11,7 +11,7 @@ const ProductDetailDialog = ({ open, setOpen, productDetail }) => {
                 <div className='relative overflow-hidden rounded-lg'>
                     <img src={productDetail?.image} alt={productDetail?.title} width={600} height={600} className='aspect-square object-cover w-full' />
                 </div>
-                <div >
+                <div>
                     <div>
                         <h1 className='text-2xl font-extrabold'>{productDetail?.title}</h1>
                         <p className='text-lg mb-5 mt-5 text-muted-foreground'>
