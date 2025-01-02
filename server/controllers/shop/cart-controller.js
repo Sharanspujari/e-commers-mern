@@ -19,7 +19,7 @@ if(!userId || !productId || quantity<=0){
             message:'Product not found'
         })
     }
-    const cart = await Cart.findOne({userId});
+    let cart = await Cart.findOne({userId});
     if(!cart){
         cart = new Cart({userId,items:[]});
     }
@@ -57,7 +57,7 @@ const fetchCartItems = async(req,res)=>{
     })
  }
  const cart = await Cart.findOne({userId}).populate({
-    path:'item.productId',
+    path:'items.productId',
     select:'image title price salePrice'
  })
  if(!cart){

@@ -23,7 +23,7 @@ const ProductDetailDialog = ({ open, setOpen, productDetail }) => {
                             ${productDetail?.price}
                         </p>
                         {
-                            productDetail?.salePrice > 0 ? <p className='text-2xl font-bold text-gray-500'>${productDetail?.price}</p> : null
+                            productDetail?.salePrice > 0 ? <p className='text-2xl font-bold text-gray-500'>${productDetail?.salePrice}</p> : null
                         }
                     </div>
                     <div className='flex items-center gap-2 mt-2'>

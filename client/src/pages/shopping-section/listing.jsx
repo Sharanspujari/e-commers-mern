@@ -6,6 +6,7 @@ import ShoppingProductTile from "@/components/shopping-section/product-tail"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { sortOptions } from "@/config"
+import { addToCart, fetchCartItem } from "@/store/user/cart-slice"
 // import { getAllProducts } from "@/store/admin/product-slice"
 import { fetchAllShoppingProducts, fetchProductDetail } from "@/store/user/products-slice"
 import { ArrowUpDownIcon } from "lucide-react"
@@ -31,13 +32,16 @@ const ShoppingListing = () => {
   const [filterList, setFilterList] = useState({});
   const [searchParams, setSearchParams] = useSearchParams()
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  const { user } = useSelector(state => state.auth)
+  console.log('user: ', user);
   // open product detail dailog when product details has value
 
 
   // fetch list of products
   const dispatch = useDispatch();
   const { productList, productDetail } = useSelector(state => state.shoppingProducts)
+  const {cartItems} =useSelector(state=>state.shoppingCart)
+  console.log('cartItems: ', cartItems);
   console.log('productList: ', productList);
   console.log('productDetail: ', productDetail);
   useEffect(() => {
@@ -89,6 +93,15 @@ const ShoppingListing = () => {
     console.log('getCurrentProId: ', getCurrentProId);
     dispatch(fetchProductDetail(getCurrentProId))
   }
+
+  const handleAddToCart = (getCurrentProductId) => {
+    dispatch(addToCart({ userId: user?.id, productId: getCurrentProductId, quantity: 1 })).then(data => {
+      if (data?.payload?.success) {
+        dispatch(fetchCartItem(user?.id))
+      }
+    })
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
       <ProductFilter filterList={filterList} handleFilter={handleFilter} />
@@ -117,7 +130,7 @@ const ShoppingListing = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  lg:grid-cols-4 gap-4 p-4">
           {
-            productList && productList.length > 0 ? productList.map(productItem => <ShoppingProductTile key={productItem._id} product={productItem} handleGetProductDetails={handleGetProductDetails} />) : null
+            productList && productList.length > 0 ? productList.map(productItem => <ShoppingProductTile key={productItem._id} product={productItem} handleGetProductDetails={handleGetProductDetails} handleAddToCart={handleAddToCart} />) : null
           }
         </div>
       </div>
