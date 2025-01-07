@@ -33,17 +33,13 @@ const ShoppingListing = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { user } = useSelector(state => state.auth)
-  console.log('user: ', user);
   // open product detail dailog when product details has value
 
 
   // fetch list of products
   const dispatch = useDispatch();
   const { productList, productDetail } = useSelector(state => state.shoppingProducts)
-  const {cartItems} =useSelector(state=>state.shoppingCart)
-  console.log('cartItems: ', cartItems);
-  console.log('productList: ', productList);
-  console.log('productDetail: ', productDetail);
+
   useEffect(() => {
     if (productDetail !== null) {
       setIsDialogOpen(true)
@@ -68,7 +64,7 @@ const ShoppingListing = () => {
 
   // sort products
   const handleSort = (value) => {
-    console.log('value: ', value);
+
     setSortList(value)
   }
   // filter product
@@ -90,7 +86,7 @@ const ShoppingListing = () => {
   }
 
   const handleGetProductDetails = (getCurrentProId) => {
-    console.log('getCurrentProId: ', getCurrentProId);
+
     dispatch(fetchProductDetail(getCurrentProId))
   }
 

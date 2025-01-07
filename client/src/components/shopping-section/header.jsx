@@ -9,8 +9,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "../ui/avatar"
 import { logoutUser } from "@/store/auth-slice"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import CartWrapper from "./cart-wrapper"
+import { Badge } from "../ui/badge"
+import { fetchCartItem } from "@/store/user/cart-slice"
 
 
 const MenuItems = () => {
@@ -25,19 +27,29 @@ const MenuItems = () => {
 
 const HeaderRightContent = () => {
   const { user } = useSelector((state) => state.auth)
+  const { cartItems } = useSelector(state => state.shoppingCart)
+  console.log('cartItems: ', cartItems);
+
   const [openCartSheet, setOpenCartSheet] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(logoutUser())
   }
+  useEffect(() => {
+    dispatch(fetchCartItem(user?.id))
+  }, [dispatch])
   return <div className="flex lg:items-center lg:flex-row flex-col gap-4">
     <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
-      <Button onClick={() => setOpenCartSheet(true)} varient="outline" size="icon">
+      <Button className="relative" onClick={() => setOpenCartSheet(true)} varient="outline" size="icon">
         <ShoppingCart />
+        {
+          cartItems?.items?.length > 0 ? <Badge className={"absolute bg-black -top-1 -right-2 text-white"}>{cartItems?.items?.length}</Badge> : null
+
+        }
         <span className="sr-only">User cart</span>
       </Button>
-      <CartWrapper />
+      <CartWrapper cartItems={cartItems && cartItems.items && cartItems.items.length > 0 ? cartItems.items : []} />
     </Sheet>
 
 
