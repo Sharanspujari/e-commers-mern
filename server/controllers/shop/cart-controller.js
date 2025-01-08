@@ -101,7 +101,7 @@ const updateCartItemQty = async(req,res)=>{
     try{
         // accept userId,productId,quantity from user
 const {userId,productId,quantity} = req.body;
-if(!userId || !productId || !quantity<=0){
+if(!userId || !productId || quantity<=0){
     return res.status(400).json({
         success:false,
         message:"Invalid data provided!"
@@ -142,7 +142,7 @@ cart.items[findCurrentProductIndex].quantity = quantity;
     res.status(200).json({
         success:true,
         data:{
-            ...data._doc,
+            ...cart._doc,
             items:populatedCartItems
         }
     })
@@ -177,7 +177,7 @@ if(!cart){
 }
 cart.items = cart.items.filter(item=>item.productId._id.toString() !== productId)
 await cart.save();
-await Cart.populate({
+await cart.populate({
     path:"items.productId",
     select:"image title price salePrice"
 })
@@ -192,7 +192,7 @@ const populatedCartItems = cart.items.map((item)=>({
       res.status(200).json({
           success:true,
           data:{
-              ...data._doc,
+              ...cart._doc,
               items:populatedCartItems
           }
       })

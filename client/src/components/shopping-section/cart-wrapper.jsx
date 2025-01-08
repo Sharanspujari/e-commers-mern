@@ -3,6 +3,7 @@ import { Button } from '../ui/button'
 import CartItemContent from './cart-items-content'
 
 const CartWrapper = ({ cartItems }) => {
+    const totalCartAmount = cartItems && cartItems?.length > 0 ? cartItems.reduce((sum, currentItem) => sum + (currentItem?.salePrice > 0 ? currentItem?.salePrice : currentItem?.price) * currentItem?.quantity, 0) : 0
     return (
         <SheetContent className="sm:max-w-md bg-white overflow-auto">
             <SheetHeader>
@@ -11,7 +12,7 @@ const CartWrapper = ({ cartItems }) => {
             {/* Cart Items List Wrapper */}
             <div className='mt-8 space-y-4'>
                 {
-                    cartItems && cartItems?.length && cartItems.map((item) => <CartItemContent key={item} cartItem={item} />)
+                    cartItems && cartItems?.length && cartItems.map((item) => <CartItemContent key={item.id} cartItem={item} />)
                 }
             </div>
 
@@ -19,7 +20,7 @@ const CartWrapper = ({ cartItems }) => {
             <div className='mt-8 space-y-4'>
                 <div className='flex justify-between'>
                     <span className='font-bold'>Total</span>
-                    <span className='font-bold'>$1000</span>
+                    <span className='font-bold'>${totalCartAmount}</span>
                 </div>
             </div>
             <Button className="w-full bg-black text-white mt-6">Checkout</Button>

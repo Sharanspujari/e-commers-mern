@@ -6,6 +6,7 @@ import ShoppingProductTile from "@/components/shopping-section/product-tail"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { sortOptions } from "@/config"
+import { useToast } from "@/hooks/use-toast"
 import { addToCart, fetchCartItem } from "@/store/user/cart-slice"
 // import { getAllProducts } from "@/store/admin/product-slice"
 import { fetchAllShoppingProducts, fetchProductDetail } from "@/store/user/products-slice"
@@ -33,6 +34,7 @@ const ShoppingListing = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { user } = useSelector(state => state.auth)
+  const { toast } = useToast();
   // open product detail dailog when product details has value
 
 
@@ -94,6 +96,10 @@ const ShoppingListing = () => {
     dispatch(addToCart({ userId: user?.id, productId: getCurrentProductId, quantity: 1 })).then(data => {
       if (data?.payload?.success) {
         dispatch(fetchCartItem(user?.id))
+        toast({
+          title: "Product is added to cart"
+        })
+
       }
     })
   }
