@@ -4,9 +4,32 @@ import { Button } from '../ui/button'
 import { Dialog, DialogContent } from '../ui/dialog'
 import { Separator } from '../ui/separator'
 import { Input } from '../ui/input'
+import { useDispatch, useSelector } from 'react-redux'
+import { addToCart, fetchCartItem } from '@/store/user/cart-slice'
+import { useToast } from '@/hooks/use-toast'
+import { setProductDetails } from '@/store/user/products-slice'
 const ProductDetailDialog = ({ open, setOpen, productDetail }) => {
+    const dispatch = useDispatch()
+    const { toast } = useToast();
+    const { user } = useSelector((state) => state?.auth)
+
+    const handleAddToCart = (getCurrentProductId) => {
+        dispatch(addToCart({ userId: user?.id, productId: getCurrentProductId, quantity: 1 })).then(data => {
+            if (data?.payload?.success) {
+                dispatch(fetchCartItem(user?.id))
+                toast({
+                    title: "Product is added to cart"
+                })
+
+            }
+        })
+    }
+    const handleDialogClose = () => {
+        setOpen(false)
+        dispatch(setProductDetails())
+    }
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={handleDialogClose}>
             <DialogContent className="bg-white grid grid-cols-2 gap-8 sm:p-12 max-h-[500px] overflow-auto max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw] ">
                 <div className='relative overflow-hidden rounded-lg'>
                     <img src={productDetail?.image} alt={productDetail?.title} width={600} height={600} className='aspect-square object-cover w-full' />
@@ -37,7 +60,7 @@ const ProductDetailDialog = ({ open, setOpen, productDetail }) => {
                         <span className='text-gray-500'>{4.5}</span>
                     </div>
                     <div className='mt-5 mb-5'>
-                        <Button className="w-full bg-black text-white hover:bg-gray-800"> Add to cart</Button>
+                        <Button className="w-full bg-black text-white hover:bg-gray-800" onClick={() => handleAddToCart(productDetail?._id)}> Add to cart</Button>
                     </div>
                     <Separator className="bg-gray-200" />
                     <div className='max-h-[300px] overflow-auto mt-3'>
