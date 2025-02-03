@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllShoppingProducts } from "@/store/user/products-slice";
 import ShoppingProductTile from "@/components/shopping-section/product-tail";
+import { useNavigate } from "react-router-dom";
 
 const categoriesWithIcon = [
   { id: "men", label: "Men", icon: ShirtIcon },
@@ -18,21 +19,31 @@ const categoriesWithIcon = [
   { id: "footwear", label: "Footwear", icon: UmbrellaIcon },
 ]
 
-const brandWithIcon =[
-  {id:"nike",label:"Nike",icon:Shirt},
-  {id:"adidas",label:"Adidas",icon:Layers2},
-  {id:"puma",label:"Puma",icon:SwatchBook},
-  {id:"levi",label:"Levi",icon:EthernetPort},
-  {id:"zara",label:"Zara",icon:Dessert },
-  {id:"h&m",label:"H&M",icon:Puzzle}
+const brandWithIcon = [
+  { id: "nike", label: "Nike", icon: Shirt },
+  { id: "adidas", label: "Adidas", icon: Layers2 },
+  { id: "puma", label: "Puma", icon: SwatchBook },
+  { id: "levi", label: "Levi", icon: EthernetPort },
+  { id: "zara", label: "Zara", icon: Dessert },
+  { id: "h&m", label: "H&M", icon: Puzzle }
 
 ]
 const ShoppingHome = () => {
   const slides = [bannerTwo, bannerOne, bannerThree];
   const [currentSlide, setCurrentSlide] = useState(0)
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { productList } = useSelector((state) => state?.shoppingProducts)
-  console.log('productList: ', productList);
+
+  const handleNavigateToListingPage = (getCurrentItem, section) => {
+    sessionStorage.removeItem("filters");
+    const currentFilter = {
+      [section]: [getCurrentItem.id]
+    }
+
+    sessionStorage.setItem("filters", JSON.stringify(currentFilter));
+    navigate(`/shop/listing`);
+  }
   useEffect(() => {
     dispatch(fetchAllShoppingProducts({ filterParams: {}, sortParams: 'price-lowtohigh' }))
   }, [dispatch])
@@ -64,7 +75,7 @@ const ShoppingHome = () => {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {
-            categoriesWithIcon?.map(categoryiItem => <Card key={categoryiItem?.id} className="cursor-pointer hover:shadow-lg transition-shadow">
+            categoriesWithIcon?.map(categoryiItem => <Card onClick={() => handleNavigateToListingPage(categoryiItem, "category")} key={categoryiItem?.id} className="cursor-pointer hover:shadow-lg transition-shadow">
               <CardContent className="flex flex-col items-center justify-center p-6">
                 <categoryiItem.icon className="w-12 h-12 mb-4 text-primary" />
                 <span className="font-bold">{categoryiItem?.label}</span>
@@ -79,7 +90,7 @@ const ShoppingHome = () => {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {
-            brandWithIcon?.map(brandItem => <Card key={brandItem?.id} className="cursor-pointer hover:shadow-lg transition-shadow">
+            brandWithIcon?.map(brandItem => <Card onClick={() => handleNavigateToListingPage(brandItem, "brand")} key={brandItem?.id} className="cursor-pointer hover:shadow-lg transition-shadow">
               <CardContent className="flex flex-col items-center justify-center p-6">
                 <brandItem.icon className="w-12 h-12 mb-4 text-primary" />
                 <span className="font-bold">{brandItem?.label}</span>
@@ -92,13 +103,13 @@ const ShoppingHome = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">Feature Products</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-           {
-            productList && productList.length > 0 ?
-            productList?.map((productItem,i)=>(
-              <ShoppingProductTile key={i} product={productItem}/>
-            ))
-            :null
-           }
+            {
+              productList && productList.length > 0 ?
+                productList?.map((productItem, i) => (
+                  <ShoppingProductTile key={i} product={productItem} />
+                ))
+                : null
+            }
           </div>
         </div>
       </section>

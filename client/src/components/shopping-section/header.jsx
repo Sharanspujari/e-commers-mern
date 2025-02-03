@@ -13,13 +13,25 @@ import { useEffect, useState } from "react"
 import CartWrapper from "./cart-wrapper"
 import { Badge } from "../ui/badge"
 import { fetchCartItem } from "@/store/user/cart-slice"
+import { Label } from "../ui/label"
 
 
 const MenuItems = () => {
+  const navigate = useNavigate();
+  const handleCategoryMenu = (getCurrentItem) => {
+    console.log('getCurrentItem: ', getCurrentItem);
+    sessionStorage.removeItem("filters")
+    const currentFilter = getCurrentItem.id !== "home" ? {
+      category: [getCurrentItem.id]
+    } : null
+    console.log('currentFilter: ', currentFilter);
+    sessionStorage.setItem("filters", JSON.stringify(currentFilter))
+    navigate(getCurrentItem.path)
+  }
   return (
     <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row">
       {
-        shoppingViewHeaderMenuItems.map((menuItem) => <Link className="text-sm font-medium" key={menuItem.id} to={menuItem.path}>{menuItem.label}</Link>)
+        shoppingViewHeaderMenuItems.map((menuItem) => <Label onClick={() => handleCategoryMenu(menuItem)} className="text-sm font-medium cursor-pointer" key={menuItem.id}>{menuItem.label}</Label>)
       }
     </nav>
   )
